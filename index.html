@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101411">
+<title>NAVEE GT3 Max · Companion</title>
+<style>
+:root{color-scheme:dark;--bg:#101411;--panel:#1a211c;--line:#303b32;--lime:#c6ff58;--muted:#a6b1a8;--red:#ff8d8d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#243126 0,#101411 48%);color:#f4f7f2;font:16px/1.45 system-ui,-apple-system,sans-serif}
+main{max-width:760px;margin:auto;padding:22px 16px 44px}
+header{display:flex;align-items:center;gap:12px;margin-bottom:20px}.logo{width:48px;height:48px;border-radius:15px;background:var(--lime);color:#101411;display:grid;place-items:center;font-size:26px;font-weight:900}
+h1{font-size:21px;margin:0;letter-spacing:.04em}header p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.hero,.card{background:rgba(26,33,28,.94);border:1px solid var(--line);border-radius:20px;padding:18px;margin:12px 0}
+.hero{padding:22px}.eyebrow{color:var(--lime);font-size:12px;letter-spacing:.13em;font-weight:800}
+h2{font-size:19px;margin:5px 0 8px}.sub{color:var(--muted);font-size:14px}
+.status{display:flex;align-items:center;gap:9px;margin:16px 0;font-weight:650}.dot{width:10px;height:10px;border-radius:50%;background:#78827a}.dot.on{background:var(--lime);box-shadow:0 0 14px #c6ff5880}
+button{border:0;border-radius:13px;padding:13px 15px;font-weight:750;font-size:15px;cursor:pointer}
+.primary{background:var(--lime);color:#101411;width:100%}.secondary{background:#303b32;color:#f4f7f2;width:100%;margin-top:9px}
+button:disabled{opacity:.45;cursor:not-allowed}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.metric{background:#111713;border-radius:14px;padding:14px}.metric span{display:block;color:var(--muted);font-size:12px}.metric strong{display:block;font-size:16px;margin-top:5px;overflow-wrap:anywhere}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:12px}.sectionhead h2{margin:0 0 12px}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#0b0e0c;border:1px solid var(--line);border-radius:12px;padding:12px;max-height:260px;overflow:auto;color:#cdd7ce;font-size:12px}
+ul{padding-left:20px;color:var(--muted)}li{margin:7px 0}.warn{border-color:#665b31}.warn strong{color:var(--lime)}.tiny{font-size:12px;color:var(--muted)}.tag{font-size:11px;border:1px solid var(--line);padding:4px 7px;border-radius:99px;color:var(--muted)}
+footer{color:var(--muted);font-size:12px;margin-top:20px}a{color:var(--lime)}
+@media(min-width:560px){.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}.secondary{margin-top:0}.hero{padding:26px}}
+</style>
+</head>
+<body><main>
+<header><div class="logo">ϟ</div><div><h1>ESCOOTER TUNER</h1><p>NAVEE GT3 Max · Web Companion</p></div><span class="tag" style="margin-left:auto">BETA</span></header>
+<section class="hero">
+<div class="eyebrow">BLUETOOTH DIAGNOSTIK</div>
+<h2>Verbinde deinen Scooter</h2>
+<div class="sub">Erster echter Verbindungstest: Gerät finden, Bluetooth-Verbindung aufbauen und verfügbare GATT-Dienste anzeigen.</div>
+<div class="status"><span id="dot" class="dot"></span><span id="status">Noch nicht verbunden</span></div>
+<div class="buttons">
+<button id="connect" class="primary">NAVEE suchen & verbinden</button>
+<button id="scan" class="secondary">Alle Bluetooth-Geräte anzeigen</button>
+</div>
+<p class="tiny">Scooter einschalten und nah ans iPhone stellen. Die offizielle NAVEE-App während des Tests am besten schließen.</p>
+</section>
+<section class="card">
+<div class="sectionhead"><h2>Verbindungsstatus</h2><span id="deviceTag" class="tag">Offline</span></div>
+<div class="grid">
+<div class="metric"><span>Gerätename</span><strong id="deviceName">—</strong></div>
+<div class="metric"><span>GATT-Verbindung</span><strong id="gattState">Getrennt</strong></div>
+<div class="metric"><span>Dienste gefunden</span><strong id="serviceCount">—</strong></div>
+<div class="metric"><span>Charakteristiken</span><strong id="charCount">—</strong></div>
+</div>
+</section>
+<section class="card">
+<div class="sectionhead"><h2>Bluetooth-Diagnose</h2><button id="clear" class="tag">Leeren</button></div>
+<div id="services" class="sub">Noch keine Dienste abgefragt.</div>
+<pre id="log" aria-live="polite">Bereit. Tippe auf „NAVEE suchen & verbinden“.</pre>
+</section>
+<section class="card warn">
+<h2>Was diese erste Version kann</h2>
+<ul>
+<li>Bluetooth-Gerät über die Browser-Auswahl suchen und verbinden.</li>
+<li>Erreichbare GATT-Dienste und Charakteristiken auflisten.</li>
+<li>Lesbare Werte und freigegebene Benachrichtigungen für Diagnose testen.</li>
+</ul>
+<p class="sub"><strong>Noch nicht enthalten:</strong> authentifizierte NAVEE-Telemetrie, Fahrdaten-Dekodierung, Einstellungen schreiben oder Firmware-Updates. Dafür muss das konkrete Protokoll des GT3 Max sauber implementiert und am Scooter getestet werden.</p>
+</section>
+<section class="card">
+<h2>iPhone-Hinweis</h2>
+<p class="sub">Safari auf dem iPhone unterstützt Web Bluetooth nicht. Verwende einen iOS-Browser, der Web Bluetooth ausdrücklich unterstützt (z. B. Bluefy), und öffne diese Seite über eine sichere HTTPS-Adresse. Eine lokal gespeicherte HTML-Datei allein reicht dafür normalerweise nicht.</p>
+</section>
+<footer>Die Seite sendet keine Scooter-Daten an einen Server. Keine Schreibbefehle oder Firmware-Änderungen werden ausgeführt. Diagnose nur im Stand durchführen.</footer>
+</main>
+<script>
+(() => {
+  const SERVICE = '0000d0ff-0000-1000-8000-00805f9b34fb';
+  const $ = id => document.getElementById(id);
+  let device = null, server = null;
+  const log = (msg) => {
+    const stamp = new Date().toLocaleTimeString();
+    $('log').textContent += `\n[${stamp}] ${msg}`;
+    $('log').scrollTop = $('log').scrollHeight;
+  };
+  const setStatus = (connected, text) => {
+    $('dot').className = connected ? 'dot on' : 'dot';
+    $('status').textContent = text;
+    $('deviceTag').textContent = connected ? 'Verbunden' : 'Offline';
+    $('gattState').textContent = connected ? 'Verbunden' : 'Getrennt';
+  };
+  function disconnected() {
+    setStatus(false, 'Verbindung getrennt');
+    log('Bluetooth-Verbindung wurde getrennt.');
+    $('serviceCount').textContent = '—'; $('charCount').textContent = '—';
+  }
+  async function connect(allowAny) {
+    if (!navigator.bluetooth) {
+      log('Web Bluetooth ist in diesem Browser nicht verfügbar.');
+      $('status').textContent = 'Browser unterstützt kein Web Bluetooth';
+      alert('Dieser Browser unterstützt Web Bluetooth nicht. Auf dem iPhone brauchst du einen kompatiblen Browser wie Bluefy; Safari funktioniert dafür nicht.');
+      return;
+    }
+    try {
+      $('connect').disabled = $('scan').disabled = true;
+      $('status').textContent = 'Bluetooth-Auswahl wird geöffnet …';
+      const options = allowAny
+        ? {acceptAllDevices:true, optionalServices:[SERVICE, 'battery_service', 'device_information']}
+        : {filters:[{namePrefix:'NAVEE'}], optionalServices:[SERVICE, 'battery_service', 'device_information']};
+      device = await navigator.bluetooth.requestDevice(options);
+      $('deviceName').textContent = device.name || '(kein Name gemeldet)';
+      device.addEventListener('gattserverdisconnected', disconnected);
+      log(`Ausgewählt: ${device.name || 'Unbenanntes Gerät'}`);
+      $('status').textContent = 'Verbinde …';
+      server = await device.gatt.connect();
+      setStatus(true, 'Bluetooth verbunden');
+      log('GATT-Verbindung erfolgreich.');
+      await inspectServices();
+    } catch (e) {
+      log(`${e.name || 'Fehler'}: ${e.message || e}`);
+      $('status').textContent = e.name === 'NotFoundError' ? 'Kein Gerät ausgewählt' : 'Verbindung fehlgeschlagen';
+    } finally {
+      $('connect').disabled = $('scan').disabled = false;
+    }
+  }
+  async function inspectServices() {
+    const root = $('services');
+    root.textContent = 'Dienste werden abgefragt …';
+    let all = [];
+    try {
+      all = await server.getPrimaryServices();
+    } catch (e) {
+      log(`Dienste konnten nicht vollständig gelesen werden: ${e.message}. Der Browser kann nur ausdrücklich freigegebene Dienste anzeigen.`);
+      root.textContent = 'Der Browser hat keine Dienste freigegeben. Das ist nicht automatisch ein Defekt des Scooters.';
+      return;
+    }
+    let charTotal = 0, lines = [];
+    for (const service of all) {
+      lines.push(`Dienst: ${service.uuid}`);
+      try {
+        const chars = await service.getCharacteristics();
+        charTotal += chars.length;
+        for (const ch of chars) {
+          const p = Object.entries(ch.properties).filter(([k,v])=>v).map(([k])=>k).join(', ') || 'keine';
+          lines.push(`  • ${ch.uuid} [${p}]`);
+          if (ch.properties.read) {
+            try {
+              const value = await ch.readValue();
+              lines.push(`    Lesen: ${hex(value)}`);
+            } catch(e) {
+              lines.push(`    Lesen nicht erlaubt: ${e.message}`);
+            }
+          }
+          if (ch.properties.notify || ch.properties.indicate) {
+            try {
+              await ch.startNotifications();
+              ch.addEventListener('characteristicvaluechanged', ev => {
+                log(`Notify ${ch.uuid}: ${hex(ev.target.value)}`);
+              });
+              lines.push('    Benachrichtigungen aktiviert.');
+            } catch(e) {
+              lines.push(`    Notify nicht verfügbar: ${e.message}`);
+            }
+          }
+        }
+      } catch(e) { lines.push(`  Charakteristiken nicht lesbar: ${e.message}`); }
+    }
+    $('serviceCount').textContent = String(all.length);
+    $('charCount').textContent = String(charTotal);
+    root.textContent = lines.length ? lines.join('\n') : 'Verbindung steht, aber keine Dienste sichtbar.';
+    log(`Diagnose abgeschlossen: ${all.length} Dienst(e), ${charTotal} Charakteristik(en) sichtbar.`);
+  }
+  function hex(data) {
+    return Array.from(new Uint8Array(data.buffer, data.byteOffset, data.byteLength))
+      .map(b=>b.toString(16).padStart(2,'0')).join(' ').toUpperCase() || '(leer)';
+  }
+  $('connect').addEventListener('click', () => connect(false));
+  $('scan').addEventListener('click', () => connect(true));
+  $('clear').addEventListener('click', () => $('log').textContent = 'Protokoll geleert.');
+  if (!window.isSecureContext) log('Hinweis: Web Bluetooth benötigt HTTPS oder localhost.');
+  if (!navigator.bluetooth) log('Dieser Browser meldet keine Web-Bluetooth-Unterstützung.');
+})();
+</script></body></html>
